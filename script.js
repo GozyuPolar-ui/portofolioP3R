@@ -331,13 +331,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function getSubmenuChrome(panel) {
         if (!panel) {
-            return { overlay: false, menuShift: false, photos: false };
+            return { overlay: false, menuShift: false, menuHide: false, photos: false };
         }
         if (HERO_BAR_PANEL_IDS.has(panel.id)) {
-            return { overlay: true, menuShift: true, photos: false };
+            return { overlay: true, menuShift: true, menuHide: false, photos: false };
         }
         if (panel.id === 'panel_calendar') {
-            return { overlay: true, menuShift: false, photos: false };
+            // list project + panel detail memenuhi layar, menu utama disembunyikan agar tidak menimpa
+            return { overlay: true, menuShift: false, menuHide: true, photos: false };
         }
         if (PROSE_PANEL_IDS.has(panel.id)) {
             return { overlay: true, menuShift: false, photos: true };
@@ -346,10 +347,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function applySubmenuChrome(chrome) {
-        const { overlay, menuShift, photos } = chrome;
+        const { overlay, menuShift, menuHide, photos } = chrome;
 
         if (container) {
             container.classList.toggle('menu-shifted', !!menuShift);
+            container.classList.toggle('menu-hidden', !!menuHide);
         }
         if (submenuBgOverlay) {
             submenuBgOverlay.classList.toggle('visible', !!overlay);
