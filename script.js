@@ -460,7 +460,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Handle submenu close
-            if (event.key === "Escape" || event.key === "Backspace" || (event.key === "a" || event.key === "A")) {
+            if (event.key === "Escape" || event.key === "Backspace" || (event.key === "b" || event.key === "B")) {
                 closeSubmenu();
             }
             return; // Block other navigation while in submenu
@@ -479,8 +479,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 break;
             case "Enter":
             case " ":
-            case "b":
-            case "B":
+            case "a":
+            case "A":
                 openSubmenu();
                 break;
             default:
@@ -845,7 +845,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updateSocialsSelection();
             return true;
         }
-        if (event.key === "Enter" || event.key === " " || event.key === "b" || event.key === "B") {
+        if (event.key === "Enter" || event.key === " " || event.key === "a" || event.key === "A") {
             openSocialsLink();
             return true;
         }
@@ -977,7 +977,7 @@ document.addEventListener("DOMContentLoaded", function () {
             rsScrollToActive();
             return true;
         }
-        if (event.key === "Enter" || event.key === " " || event.key === "b" || event.key === "B") {
+        if (event.key === "Enter" || event.key === " " || event.key === "a" || event.key === "A") {
             openResumeLink();
             return true;
         }

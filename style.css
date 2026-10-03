@@ -675,7 +675,6 @@ body.loaded .bottom-bar {
 /* Saat submenu terbuka: tombol A/B tetap kelihatan di atas panel & bisa diklik */
 body.submenu-open .bottom-bar {
     z-index: 80;
-    bottom: 80px;
     pointer-events: none;
 }
 
@@ -2006,7 +2005,7 @@ body.desktop-ready .text.spawned {
 /* footer hints */
 .sc-footer {
     position: fixed;
-    bottom: 20px;
+    bottom: 90px;
     right: 28px;
     display: flex;
     flex-direction: column;
