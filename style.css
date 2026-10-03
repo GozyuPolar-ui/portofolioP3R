@@ -1061,6 +1061,35 @@ body.submenu-open .container {
     color: var(--cyan-3);
 }
 
+/* baris berlabel ala kartu status */
+.placeholder-text .ph-line {
+    display: block;
+    font-size: 18px;
+    margin-top: 6px;
+}
+
+.placeholder-text .ph-intro {
+    font-size: 20px;
+    margin: 0 0 8px;
+}
+
+.placeholder-text .ph-tag {
+    display: inline-block;
+    min-width: 76px;
+    margin-right: 8px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    color: var(--cyan-3);
+}
+
+#panel_persona .placeholder-text .ph-tag {
+    color: var(--pink);
+}
+
+#panel_system .placeholder-text .ph-tag {
+    color: #ff8a8a;
+}
+
 #panel_persona.submenu-panel--prose .bold-shape-bg {
     background-color: rgba(253, 119, 217, 0.45);
 }
