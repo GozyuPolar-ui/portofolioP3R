@@ -948,8 +948,9 @@ body.submenu-open .container {
 .submenu-panels-container {
     position: fixed;
     inset: 0;
-    /* hanya skala yang ikut --k (dari script.js); padding tetap supaya posisinya relatif ke menu utama tidak bergeser */
-    padding-left: 800px;
+    /* hanya skala yang ikut --k (dari script.js). padding-left menentukan jarak panel dari menu:
+       892px = agak jauh dari menu, tapi dibatasi supaya sisi kanan panel tidak keluar layar */
+    padding-left: min(892px, calc((100vw - 780px * var(--k, 1) - 60px) / (1.3 * var(--k, 1))));
 
     padding-bottom: 35px;
 
