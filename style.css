@@ -948,6 +948,7 @@ body.submenu-open .container {
 .submenu-panels-container {
     position: fixed;
     inset: 0;
+    /* hanya skala yang ikut --k (dari script.js); padding tetap supaya posisinya relatif ke menu utama tidak bergeser */
     padding-left: 800px;
 
     padding-bottom: 35px;
@@ -955,7 +956,7 @@ body.submenu-open .container {
     display: grid;
     place-items: center;
     z-index: 71;
-    scale: 1.3;
+    scale: calc(1.3 * var(--k, 1));
     pointer-events: none;
 
 }
