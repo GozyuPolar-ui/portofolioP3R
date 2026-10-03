@@ -830,26 +830,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // --- Resume Panel Logic ---
+    // ====== DAFTAR PROJECT: tambah/ubah di sini ======
+    const GH = 'https://github.com/GozyuPolar-ui';
+    const PROJECTS = [
+        { title: 'E.D.I.T.H.', sub: 'Desktop AI Assistant', desc: 'JARVIS-style desktop AI assistant (Python, WebSocket)', link: 'https://github.com/GozyuPolar-ui/E.D.I.T.H-Personal-AI.git' },
+        { title: 'PIXELVALE', sub: 'Indie Game Platform', desc: 'Indie game distribution platform (Next.js, Supabase)', link: 'https://github.com/GozyuPolar-ui/PixelValeWeb.git' },
+        { title: 'MISTS OF DAWN', sub: 'RPG Maker MZ Game', desc: 'RPG built in RPG Maker MZ, deployed as Android APK', link: 'https://github.com/GozyuPolar-ui' },
+        { title: 'EXCEEDOG', sub: 'Fan Site', desc: 'KURO Games fan site (HTML/CSS/JS, GSAP)', link: 'https://github.com/GozyuPolar-ui' },
+        { title: 'MYPORTOFOLIO', sub: 'Portfolio Site', desc: 'Personal portfolio with HUD/holographic design, on Vercel', link: 'https://github.com/GozyuPolar-ui' },
+        { title: 'FIGURE TRACKER', sub: 'Laravel CRUD App', desc: 'Figure collection manager, built to learn Laravel', link: GH, status: 'In progress' },
+        { title: 'JURUSAN EXPERT', sub: 'Expert System', desc: 'Recommends university majors for Indonesian high school seniors', link: 'https://github.com/GozyuPolar-ui' },
+        { title: 'UMKM ORDERS', sub: 'Order & Catalog', desc: 'UMKM ordering system and catalog (HTML/CSS/JS, Supabase)', link: 'https://github.com/GozyuPolar-ui/Tugas-UMKM.git', status: 'Complete' }
+    ];
+
+    const rsToRoman = n => {
+        const m = [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+        let r = '';
+        for (const [v, s] of m) while (n >= v) { r += s; n -= v; }
+        return r;
+    };
+    const rsPad = n => String(n).padStart(2, '0');
+
     let rsActiveIndex = 0;
+    const rsStack = document.getElementById('rs_stack');
+    if (rsStack) {
+        rsStack.insertAdjacentHTML('beforeend', PROJECTS.map((p, i) => `
+            <div class="resume-card-wrap" id="rs_card_${i}" style="transition-delay: ${Math.min(i, 8) * 55}ms">
+                <div class="resume-card">
+                    <div class="resume-badge"><div class="resume-badge-text">${rsToRoman(i + 1)}</div></div>
+                    <div class="resume-card-inner">
+                        <div class="resume-title">${p.title}</div>
+                        <div class="resume-rank">
+                            <div class="resume-rank-label">RANK</div>
+                            <div class="resume-rank-number">${i + 1}</div>
+                        </div>
+                    </div>
+                    <div class="resume-subtitle-bar"><div class="resume-subtitle">${p.sub}</div></div>
+                </div>
+            </div>`).join(''));
+    }
     const rsCards = document.querySelectorAll('.resume-card-wrap');
+    rsCards.forEach((card, i) => {
+        card.addEventListener('mouseenter', () => { rsActiveIndex = i; updateResumeSelection(); });
+        card.addEventListener('click', () => { rsActiveIndex = i; openResumeLink(); });
+    });
 
     function initResumePanel() {
         rsActiveIndex = 0;
+        if (rsStack) rsStack.scrollTop = 0;
         updateResumeSelection();
 
         const listTag = document.getElementById('rs_list_tag');
         if (listTag) listTag.classList.add('rs-mounted');
-
-        rsCards.forEach((card, i) => {
-            card.classList.add('rs-mounted');
-            card.addEventListener('mouseenter', () => {
-                rsActiveIndex = i;
-                updateResumeSelection();
-            });
-            card.addEventListener('click', () => {
-                openResumeLink();
-            });
-        });
+        rsCards.forEach(card => card.classList.add('rs-mounted'));
 
         const detailPanel = document.getElementById('rs_detail_panel');
         if (detailPanel) {
@@ -869,49 +902,33 @@ document.addEventListener("DOMContentLoaded", function () {
         if (detailPanel) detailPanel.style.opacity = '0';
     }
 
+    function rsScrollToActive() {
+        const card = rsCards[rsActiveIndex];
+        if (card) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
     function updateResumeSelection() {
-        rsCards.forEach((card, i) => {
-            if (i === rsActiveIndex) card.classList.add('active');
-            else card.classList.remove('active');
-        });
+        rsCards.forEach((card, i) => card.classList.toggle('active', i === rsActiveIndex));
 
-        // Update details panel
-        const titles = ['E.D.I.T.H.', 'PIXELVALE', 'MISTS OF DAWN', 'EXCEEDOG'];
-        const subtexts = [
-            "- JARVIS-style desktop AI assistant (Python)",
-            "- Indie game distribution platform (Next.js, Supabase)",
-            "- RPG built in RPG Maker MZ, Android APK",
-            "- KURO Games fan site (HTML/CSS/JS, GSAP)"
-        ];
-        const links = [
-            'https://github.com/GozyuPolar-ui',
-            'https://github.com/GozyuPolar-ui',
-            'https://github.com/GozyuPolar-ui',
-            'https://github.com/GozyuPolar-ui'
-        ];
-
-        document.getElementById('rs_detail_index').textContent = '0' + (rsActiveIndex + 1);
-        document.getElementById('rs_detail_title').textContent = titles[rsActiveIndex];
-        document.getElementById('rs_detail_progress').textContent = (rsActiveIndex + 1) + '/4';
+        const p = PROJECTS[rsActiveIndex];
+        document.getElementById('rs_detail_index').textContent = rsPad(rsActiveIndex + 1);
+        document.getElementById('rs_detail_title').textContent = p.title;
+        document.getElementById('rs_detail_progress').textContent = (rsActiveIndex + 1) + '/' + PROJECTS.length;
+        const status = document.getElementById('rs_detail_status');
+        if (status) status.textContent = p.status || 'Personal';
 
         const bulletsContainer = document.getElementById('rs_detail_bullets');
         if (bulletsContainer) {
-            let html = `<div class="resume-detail-bullet">${subtexts[rsActiveIndex]}</div>`;
-            if (links[rsActiveIndex]) {
-                html += `<div class="resume-detail-bullet"><a href="${links[rsActiveIndex]}" target="_blank">View on GitHub</a></div>`;
+            let html = `<div class="resume-detail-bullet">- ${p.desc}</div>`;
+            if (p.link) {
+                html += `<div class="resume-detail-bullet"><a href="${p.link}" target="_blank">View on GitHub</a></div>`;
             }
             bulletsContainer.innerHTML = html;
         }
     }
 
     function openResumeLink() {
-        const links = [
-            'https://github.com/GozyuPolar-ui',
-            'https://github.com/GozyuPolar-ui',
-            'https://github.com/GozyuPolar-ui',
-            'https://github.com/GozyuPolar-ui'
-        ];
-        const link = links[rsActiveIndex];
+        const link = PROJECTS[rsActiveIndex] && PROJECTS[rsActiveIndex].link;
         if (link) window.open(link, '_blank');
     }
 
@@ -919,11 +936,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.key === "ArrowDown" || event.key === "s" || event.key === "S") {
             rsActiveIndex = (rsActiveIndex + 1) % rsCards.length;
             updateResumeSelection();
+            rsScrollToActive();
             return true;
         }
         if (event.key === "ArrowUp" || event.key === "w" || event.key === "W") {
             rsActiveIndex = (rsActiveIndex - 1 + rsCards.length) % rsCards.length;
             updateResumeSelection();
+            rsScrollToActive();
             return true;
         }
         if (event.key === "Enter" || event.key === " " || event.key === "b" || event.key === "B") {

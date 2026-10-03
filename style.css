@@ -1061,7 +1061,7 @@ body.submenu-open .container {
 
 .music-toggle {
     position: fixed;
-        top: 170px;
+        top: 36px;
     right: 36px;
     z-index: 10001;
     width: 44px;
@@ -1108,7 +1108,7 @@ body.loaded .music-toggle {
 
 .music-player {
     position: fixed;
-    top: 222px;
+    top: 88px;
     right: 24px;
     z-index: 10002;
     opacity: 0;
@@ -1117,10 +1117,31 @@ body.loaded .music-toggle {
     transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+
+
 .music-player.open {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0) scale(1);
+}
+
+.music-toggle {
+    transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s ease,
+        background 0.2s ease, top 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.music-player {
+    transition: opacity 0.25s ease,
+        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        top 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body:has(.container.menu-shifted) .music-toggle {
+    top: 170px;
+}
+
+body:has(.container.menu-shifted) .music-player {
+    top: 222px;
 }
 
 .music-shape.bold-shape-container {
@@ -2437,3 +2458,4 @@ canvas.snow,
 body {
     filter: none;
 }
+
