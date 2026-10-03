@@ -904,7 +904,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function rsScrollToActive() {
         const card = rsCards[rsActiveIndex];
-        if (card) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        if (!card || !rsStack) return;
+        const pad = 16;
+        const top = card.offsetTop;
+        const bottom = top + card.offsetHeight;
+        if (top - pad < rsStack.scrollTop) {
+            rsStack.scrollTo({ top: Math.max(0, top - pad), behavior: 'smooth' });
+        } else if (bottom + pad > rsStack.scrollTop + rsStack.clientHeight) {
+            rsStack.scrollTo({ top: bottom + pad - rsStack.clientHeight, behavior: 'smooth' });
+        }
     }
 
     function updateResumeSelection() {

@@ -2046,14 +2046,30 @@ body.desktop-ready .text.spawned {
 .resume-stack {
     position: absolute;
     top: 9vh;
-    left: 2.8vw;
+    left: calc(2.8vw - 16px);
+    box-sizing: border-box;
     width: min(47vw, 720px);
+    /* tinggi dibagi 0.9 karena stack di-scale 0.9 -> hasil akhir pas sampai ~4vh dari bawah */
+    height: calc(87vh / 0.9);
+    padding: 0 28px 28px 16px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    pointer-events: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    pointer-events: auto;
     transform: scale(0.9);
     transform-origin: top left;
+}
+
+.resume-stack::-webkit-scrollbar {
+    display: none;
+}
+
+.resume-stack>* {
+    flex-shrink: 0;
 }
 
 .resume-list-tag {
@@ -2458,4 +2474,3 @@ canvas.snow,
 body {
     filter: none;
 }
-
