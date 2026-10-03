@@ -684,6 +684,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+    // Tombol A (Confirm) & B (Back) di kanan bawah: sama persis dengan tekan Enter / Escape
+    const btnConfirm = document.getElementById('btn_confirm');
+    const btnBack = document.getElementById('btn_back');
+
+    function pressKey(key) {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: key, bubbles: true }));
+    }
+
+    if (btnConfirm) {
+        btnConfirm.addEventListener('click', function (e) {
+            e.stopPropagation();
+            pressKey('Enter');
+        });
+    }
+
+    if (btnBack) {
+        btnBack.addEventListener('click', function (e) {
+            e.stopPropagation();
+            pressKey('Escape');
+        });
+    }
+
     const predefinedPositions = [
         { left: '2vw', top: '5vh', rot: -8 },
         { left: '18vw', top: '22vh', rot: 12 },
