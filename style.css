@@ -2635,3 +2635,21 @@ body {
     font-size: calc(20.5 * var(--u));
     letter-spacing: 0;
 }
+
+
+/* ============================================================
+   KEYBOARD-ONLY MODE (body.keyboard-only)
+   - kursor disembunyikan (menimpa kursor custom di index.html)
+   - semua elemen mengabaikan input mouse: tidak ada hover/klik yang bisa
+     bentrok dengan navigasi keyboard
+   Untuk mengaktifkan mouse lagi: hapus class "keyboard-only" dari <body>.
+   ============================================================ */
+:root:has(body.keyboard-only),
+body.keyboard-only,
+body.keyboard-only * {
+    cursor: none !important;
+}
+
+body.keyboard-only * {
+    pointer-events: none !important;
+}

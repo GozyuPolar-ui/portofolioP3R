@@ -694,6 +694,33 @@ document.addEventListener("DOMContentLoaded", function () {
         musicAudio.addEventListener('pause', updatePlayPauseButton);
     }
 
+    // --- Kontrol musik lewat keyboard (mouse dinonaktifkan) ---
+    //   M = play / pause,  ← = lagu sebelumnya,  → = lagu berikutnya
+    // Pemutar muncul sebentar menampilkan judul lagu, lalu menutup sendiri.
+    let musicFlashTimer = null;
+
+    function flashMusicPlayer() {
+        openMusicPlayer();
+        window.clearTimeout(musicFlashTimer);
+        musicFlashTimer = window.setTimeout(closeMusicPlayer, 2200);
+    }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
+        const hasTrack = !!(musicAudio && musicAudio.src);
+
+        if (event.key === 'm' || event.key === 'M') {
+            toggleMusicPlayback();
+            flashMusicPlayer();
+        } else if (event.key === 'ArrowRight') {
+            loadMusicTrack(hasTrack ? musicTrackIndex + 1 : 0, true);
+            flashMusicPlayer();
+        } else if (event.key === 'ArrowLeft') {
+            loadMusicTrack(hasTrack ? musicTrackIndex - 1 : 0, true);
+            flashMusicPlayer();
+        }
+    });
+
     document.addEventListener('click', function (event) {
         if (!isMusicPlayerOpen) return;
         if (!event.target.closest('#music_player') && !event.target.closest('#music_toggle')) {
