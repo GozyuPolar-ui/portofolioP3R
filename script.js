@@ -38,6 +38,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let isSubmenuOpen = false;
     let currentPanel = null;
+    // true = ↑↓ / scroll menggerakkan isi daftar (GitHub, IG, Email, dst) di panel ITEMS & SOCIAL LINK
+    // false = ↑↓ / scroll pindah antar menu (Skills, About Me, dll)
+    let inListMode = true;
 
 
 
@@ -403,6 +406,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function openSubmenu() {
         if (isSubmenuOpen) return;
         isSubmenuOpen = true;
+        inListMode = true;
         playNavSound();
 
         const data = highlightData[itemSpans[currentIndex].id];
@@ -470,6 +474,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function switchSubmenuTo(index) {
         if (!isSubmenuOpen) return;
                 if (currentIndex !== index) {
+                    // Pindah menu = kembali ke level pilihan menu (tekan A/Enter untuk masuk daftar)
+                    inListMode = false;
+
                     // Hide old panel immediately
                     if (currentPanel) {
                         currentPanel.classList.remove('visible');
@@ -503,17 +510,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Panel yang punya navigasi daftar sendiri (↑↓ / wheel dipakai untuk daftarnya)
     function panelHasOwnListNav() {
-        return isHeroBarsPanel(currentPanel) || (currentPanel && currentPanel.id === 'panel_calendar');
+        return (isHeroBarsPanel(currentPanel) && inListMode) || (currentPanel && currentPanel.id === 'panel_calendar');
     }
 
     // Scroll mouse di panel biasa (About, Skills, System) = pindah ke menu sebelum/sesudahnya
     let submenuWheelLock = false;
     window.addEventListener('wheel', function (e) {
-        if (!isSubmenuOpen || submenuWheelLock || panelHasOwnListNav()) return;
+        if (!isSubmenuOpen || submenuWheelLock) return;
         if (Math.abs(e.deltaY) < 10) return;
+        const dir = e.deltaY > 0 ? 1 : -1;
+        // Panel ITEMS / SOCIAL LINK saat fokus di daftar: scroll menggeser pilihan GitHub / IG / Email
+        if (isHeroBarsPanel(currentPanel) && inListMode) {
+            submenuWheelLock = true;
+            setTimeout(() => { submenuWheelLock = false; }, 200);
+            moveSocialsSelection(dir);
+            return;
+        }
+        if (panelHasOwnListNav()) return;
         submenuWheelLock = true;
         setTimeout(() => { submenuWheelLock = false; }, 450);
-        const dir = e.deltaY > 0 ? 1 : -1;
         switchSubmenuTo((currentIndex + dir + itemSpans.length) % itemSpans.length);
     }, { passive: true });
 
@@ -522,7 +537,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isSubmenuOpen) {
             // Handle custom panel keys
             if (isHeroBarsPanel(currentPanel)) {
-                if (handleSocialsKey(event)) return;
+                if (inListMode) {
+                    // B / Esc di dalam daftar: balik ke pilihan menu dulu, belum ke menu utama
+                    if (event.key === "Escape" || event.key === "Backspace" || event.key === "b" || event.key === "B") {
+                        exitSocialsList();
+                        return;
+                    }
+                    if (handleSocialsKey(event)) return;
+                } else if (event.key === "Enter" || event.key === " " || event.key === "a" || event.key === "A") {
+                    // A / Enter di level menu: masuk lagi ke daftar
+                    enterSocialsList();
+                    return;
+                }
             }
             if (currentPanel && currentPanel.id === 'panel_calendar') {
                 if (handleResumeKey(event)) return;
@@ -794,20 +820,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 5 slot foto: kolom A (kiri) 3 foto, kolom B (kanan) 2 foto, bergeser setengah slot.
-    // Semua posisi/ukuran dihitung di CSS (--ph-*) supaya tidak menimpa menu/footer/foto lain.
-    const PHOTO_COL_A = '1.2vw';
-    const PHOTO_COL_B = 'max(1.2vw, min(calc(1.2vw + var(--ph-w) * 0.92), calc(var(--ph-limit) - var(--ph-w))))';
-    const photoTop = (slot) =>
-        `calc(var(--ph-top) + var(--ph-slot) * ${slot} + (var(--ph-slot) - var(--ph-h)) / 2)`;
 
-    const predefinedPositions = [
-        { left: PHOTO_COL_A, top: photoTop(0), rot: -6 },
-        { left: PHOTO_COL_B, top: photoTop(0.5), rot: 7 },
-        { left: PHOTO_COL_A, top: photoTop(1), rot: 4 },
-        { left: PHOTO_COL_B, top: photoTop(1.5), rot: -7 },
-        { left: PHOTO_COL_A, top: photoTop(2), rot: -4 }
-    ];
+const predefinedPositions = [
+    { left: '2vw',  top: '5vh',  rot: -8 },
+    { left: '18vw', top: '22vh', rot: 12 },
+    { left: '4vw',  top: '45vh', rot: -5 },
+    { left: '22vw', top: '60vh', rot: 15 },
+    { left: '8vw',  top: '75vh', rot: -10 }
+];
 
     function randomizePhotos() {
         const photos = Array.from(document.querySelectorAll('.photo-container'));
@@ -887,10 +907,16 @@ document.addEventListener("DOMContentLoaded", function () {
         scBars.forEach((bar, i) => {
             bar.classList.add('sc-mounted');
             const onEnter = () => {
+                if (!inListMode) return;
                 scActiveIndex = i;
                 updateSocialsSelection();
             };
-            const onClick = () => openSocialsLink();
+            const onClick = () => {
+                scActiveIndex = i;
+                inListMode = true;
+                updateSocialsSelection();
+                openSocialsLink();
+            };
             bar.addEventListener('mouseenter', onEnter);
             bar.addEventListener('click', onClick);
             scBarHandlers.push({ bar, onEnter, onClick });
@@ -934,11 +960,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateSocialsSelection() {
         if (scLastIndex !== scActiveIndex) {
-            if (scLastIndex !== -1) playNavSound();
+            if (scLastIndex !== -1 && inListMode) playNavSound();
             scLastIndex = scActiveIndex;
         }
         scBars.forEach((bar, i) => {
-            if (i === scActiveIndex) bar.classList.add('active');
+            // Highlight cuma muncul saat fokus ada di daftar
+            if (inListMode && i === scActiveIndex) bar.classList.add('active');
             else bar.classList.remove('active');
         });
         const labelEl = scPanelEl ? scPanelEl.querySelector('.sc-nav-label') : null;
@@ -956,6 +983,24 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             window.open(link, '_blank', 'noopener');
         }
+    }
+
+    function moveSocialsSelection(dir) {
+        if (!scBars.length) return;
+        scActiveIndex = (scActiveIndex + dir + scBars.length) % scBars.length;
+        updateSocialsSelection();
+    }
+
+    function exitSocialsList() {
+        inListMode = false;
+        playNavSound();
+        updateSocialsSelection();
+    }
+
+    function enterSocialsList() {
+        inListMode = true;
+        playNavSound();
+        updateSocialsSelection();
     }
 
     function handleSocialsKey(event) {
