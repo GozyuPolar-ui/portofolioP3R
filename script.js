@@ -751,6 +751,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Tombol M (Music): sama dengan menekan M (play / pause)
+    const btnMusic = document.getElementById('btn_music');
+    if (btnMusic) {
+        btnMusic.addEventListener('click', function (e) {
+            e.stopPropagation();
+            pressKey('m');
+        });
+    }
+
     const predefinedPositions = [
         { left: '2vw', top: '5vh', rot: -8 },
         { left: '18vw', top: '22vh', rot: 12 },
