@@ -247,9 +247,25 @@ document.addEventListener("DOMContentLoaded", function () {
     // Idle animation removed per user request
 
 
+    // Suara navigasi UI (assets/deck_ui_navigation.wav). Dipakai ulang lewat cloneNode
+    // supaya klik cepat beruntun tetap bunyi tanpa memotong suara sebelumnya.
+    const NAV_SOUND_VOLUME = 0.5;
+    const navSoundBase = new Audio('assets/deck_ui_navigation.wav');
+    navSoundBase.preload = 'auto';
+
+    function playNavSound() {
+        try {
+            const s = navSoundBase.cloneNode();
+            s.volume = NAV_SOUND_VOLUME;
+            const p = s.play();
+            if (p && p.catch) p.catch(() => { });
+        } catch (_) { /* audio diblokir / belum ada interaksi: abaikan */ }
+    }
+
     function selectItem(index, force = false) {
         if (isSubmenuOpen && !force) return;
 
+        if (index !== currentIndex) playNavSound();
         currentIndex = index;
         const itemSpan = itemSpans[currentIndex];
         const itemDiv = menuItems[currentIndex];
@@ -387,6 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function openSubmenu() {
         if (isSubmenuOpen) return;
         isSubmenuOpen = true;
+        playNavSound();
 
         const data = highlightData[itemSpans[currentIndex].id];
         currentPanel = document.getElementById(data.panelId);
@@ -420,6 +437,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function closeSubmenu() {
         if (!isSubmenuOpen) return;
+        playNavSound();
 
         const panelToHide = currentPanel;
 
@@ -754,6 +772,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- Socials Panel Logic (ITEMS + SOCIAL LINK — independent instances) ---
     let scActiveIndex = 0;
+    let scLastIndex = -1; // -1 = belum ada pilihan sebelumnya (tidak bunyi saat panel baru dibuka)
     let scPanelEl = null;
     let scBars = [];
     let scBarHandlers = [];
@@ -764,6 +783,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!scPanelEl) return;
 
         scActiveIndex = 0;
+        scLastIndex = -1;
         scBars = Array.from(scPanelEl.querySelectorAll('.sc-bar-outer'));
 
         scBars.forEach((bar, i) => {
@@ -815,6 +835,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateSocialsSelection() {
+        if (scLastIndex !== scActiveIndex) {
+            if (scLastIndex !== -1) playNavSound();
+            scLastIndex = scActiveIndex;
+        }
         scBars.forEach((bar, i) => {
             if (i === scActiveIndex) bar.classList.add('active');
             else bar.classList.remove('active');
@@ -876,6 +900,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const rsPad = n => String(n).padStart(2, '0');
 
     let rsActiveIndex = 0;
+    let rsLastIndex = -1; // -1 = belum ada pilihan sebelumnya (tidak bunyi saat panel baru dibuka)
     const rsStack = document.getElementById('rs_stack');
     if (rsStack) {
         rsStack.insertAdjacentHTML('beforeend', PROJECTS.map((p, i) => `
@@ -901,6 +926,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function initResumePanel() {
         rsActiveIndex = 0;
+        rsLastIndex = -1;
         if (rsStack) rsStack.scrollTop = 0;
         updateResumeSelection();
 
@@ -940,6 +966,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateResumeSelection() {
+        if (rsLastIndex !== rsActiveIndex) {
+            if (rsLastIndex !== -1) playNavSound();
+            rsLastIndex = rsActiveIndex;
+        }
         rsCards.forEach((card, i) => card.classList.toggle('active', i === rsActiveIndex));
 
         const p = PROJECTS[rsActiveIndex];
