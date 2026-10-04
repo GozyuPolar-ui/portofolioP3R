@@ -777,10 +777,31 @@ document.addEventListener("DOMContentLoaded", function () {
     let scBars = [];
     let scBarHandlers = [];
 
+    // Kecilkan nilai (mis. email panjang) kalau tidak muat di kolomnya. Dengan font asli
+    // biasanya tidak aktif; ini jaga-jaga kalau font fallback lebih lebar / layar sempit.
+    function fitSocialValues(root) {
+        if (!root) return;
+        root.querySelectorAll('.sc-stat').forEach((stat) => {
+            const num = stat.querySelector('.sc-stat-num');
+            const tag = stat.querySelector('.sc-stat-tag');
+            if (!num) return;
+            num.style.fontSize = '';
+            const gap = parseFloat(getComputedStyle(stat.querySelector('.sc-stat-top')).columnGap) || 0;
+            const avail = stat.getBoundingClientRect().width - (tag ? tag.getBoundingClientRect().width : 0) - gap;
+            const need = num.getBoundingClientRect().width;
+            if (avail > 0 && need > avail) {
+                const size = parseFloat(getComputedStyle(num).fontSize);
+                num.style.fontSize = (size * avail / need * 0.98).toFixed(2) + 'px';
+            }
+        });
+    }
+
     function initSocialsPanel(panelEl) {
         cleanupSocialsPanel();
         scPanelEl = panelEl || document.getElementById('panel_item');
         if (!scPanelEl) return;
+
+        fitSocialValues(scPanelEl.querySelector('.sc-root--social'));
 
         scActiveIndex = 0;
         scLastIndex = -1;
@@ -843,19 +864,21 @@ document.addEventListener("DOMContentLoaded", function () {
             if (i === scActiveIndex) bar.classList.add('active');
             else bar.classList.remove('active');
         });
-        const labels = ['ITEM 1', 'ITEM 2', 'ITEM 3'];
         const labelEl = scPanelEl ? scPanelEl.querySelector('.sc-nav-label') : null;
-        if (labelEl) labelEl.textContent = labels[scActiveIndex] || labels[0];
+        const activeBar = scBars[scActiveIndex];
+        if (labelEl) labelEl.textContent = (activeBar && activeBar.dataset.nav) || ('ITEM ' + (scActiveIndex + 1));
     }
 
     function openSocialsLink() {
-        const links = [
-            'https://github.com/GozyuPolar-ui',
-            null,
-            null
-        ];
-        const link = links[scActiveIndex];
-        if (link) window.open(link, '_blank');
+        // link diambil dari atribut data-link di tiap bar (ITEMS tidak punya link)
+        const bar = scBars[scActiveIndex];
+        const link = bar && bar.dataset.link;
+        if (!link) return;
+        if (link.startsWith('mailto:')) {
+            window.location.href = link;
+        } else {
+            window.open(link, '_blank', 'noopener');
+        }
     }
 
     function handleSocialsKey(event) {

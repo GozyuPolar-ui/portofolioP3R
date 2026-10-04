@@ -2536,3 +2536,102 @@ canvas.snow,
 body {
     filter: none;
 }
+
+
+/* ============================================================
+   SOCIAL LINK panel
+   Semua ukuran horizontal pakai --u (= lebar layar / 1920) supaya isi bar
+   (lebar 45vw) ikut mengecil di layar kecil / zoom 125%, tidak melewati tepi.
+   Dibatasi ke .sc-root--social agar panel ITEMS tidak berubah.
+   ============================================================ */
+.sc-root--social {
+    --u: clamp(0.5px, calc(100vw / 1920), 1.3px);
+}
+
+.sc-root--social .sc-bar-content {
+    padding: 0 calc(22 * var(--u)) 0 calc(14 * var(--u));
+}
+
+/* nama besar di kiri: tidak lagi tertimpa karakter */
+.sc-root--social .sc-role {
+    position: absolute;
+    left: calc(10 * var(--u));
+    top: 50%;
+    width: calc(98 * var(--u));
+    justify-content: center;
+    padding: 0;
+    font-size: calc(30 * var(--u));
+    letter-spacing: calc(-1 * var(--u));
+    transform: translateY(-50%) rotate(-30deg);
+}
+
+.sc-root--social .sc-char {
+    left: calc(112 * var(--u));
+    max-width: calc(150 * var(--u));
+}
+
+.sc-root--social .sc-main {
+    padding-left: calc(272 * var(--u));
+}
+
+.sc-root--social .sc-main-top {
+    gap: calc(10 * var(--u));
+}
+
+/* ikon SVG: abu saat tidak dipilih, warna brand saat dipilih */
+.sc-root--social .sc-icon {
+    width: calc(26 * var(--u));
+    height: calc(26 * var(--u));
+    color: rgba(255, 255, 255, 0.45);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.sc-root--social .sc-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.sc-root--social .sc-bar-outer.active .sc-icon {
+    color: var(--brand, #111);
+    transform: scale(1.1);
+}
+
+.sc-root--social .sc-label {
+    font-size: calc(27 * var(--u));
+    letter-spacing: calc(3 * var(--u));
+    white-space: nowrap;
+}
+
+/* kolom nilai: lebar sama di ketiga baris -> rata kiri & sejajar */
+.sc-root--social .sc-stats {
+    width: calc(318 * var(--u));
+    padding-right: 0;
+    flex-shrink: 0;
+}
+
+.sc-root--social .sc-stat {
+    width: 100%;
+}
+
+.sc-root--social .sc-stat-top {
+    gap: calc(6 * var(--u));
+}
+
+.sc-root--social .sc-stat-tag {
+    font-size: max(8px, calc(10 * var(--u)));
+    letter-spacing: calc(1.5 * var(--u));
+    padding: 1px calc(5 * var(--u));
+}
+
+.sc-root--social .sc-stat-num {
+    font-size: calc(26 * var(--u));
+    letter-spacing: calc(0.5 * var(--u));
+    white-space: nowrap;
+}
+
+/* email panjang: sedikit lebih kecil supaya muat utuh */
+.sc-root--social .sc-stat-num--long {
+    font-size: calc(20.5 * var(--u));
+    letter-spacing: 0;
+}
