@@ -1,87 +1,78 @@
-# Portofolio Raymond - Gaya Menu Persona 3 Reload
+# Raymond's Portfolio - Persona 3 Reload Menu Style
 
-> *"Kebenaran selalu hanya ada satu!"*
+> *"The truth is always only one!"*
 
-Situs portofolio pribadi dengan tampilan terinspirasi **menu pause Persona 3 Reload**,
-dihiasi gambar-gambar **Detective Conan** favoritku.
+A personal portfolio website with a design inspired by the **Persona 3 Reload** pause menu, decorated with my favorite **Detective Conan** images.
 
-Ini **proyek hobi dan karya penggemar (fan project)**. Tidak komersial, dibuat untuk belajar
-dan senang-senang, bukan produk resmi apa pun.
+This is a **hobby project and fan project**. It is not commercial, created for learning and having fun, not any official product.
 
 ## Demo
 
-[Cek di sini](https://gozyupolar-ui.github.io/portofolioP3R/)
+[Check it out here](https://gozyupolar-ui.github.io/portofolioP3R/)
 
-> Hanya untuk desktop (lebar layar minimal 1200 px). Di layar yang lebih kecil, situs menampilkan
-> pesan bahwa layarnya terlalu kecil.
+> Desktop only (minimum screen width of 1200 px). On smaller screens, the site shows a message that the screen is too small.
 
-## Tentang
+## About
 
-Aku Raymond, pengembang otodidak yang kuliah Computer Science di USU. Aku suka membuat web,
-game, dan alat berbasis AI. Proyek ini lahir dari dua hal yang kusuka: antarmuka menu Persona
-yang stylish, dan Detective Conan.
+My name is Raymond, a self-taught developer studying Computer Science at USU. I love making web, games, and AI-based tools. This project was born from two things I love: the stylish menu interface of Persona, and Detective Conan.
 
-Semua isinya diganti jadi milikku: profil, skill, daftar proyek, dan tautan sosial.
+Everything in it has been changed to be mine: profile, skills, project list, and social links.
 
-## Kontrol
+## Controls
 
-| Tombol | Fungsi |
+| Button | Function |
 |---|---|
-| `↑` `↓` atau `W` `S` | Pindah menu (di panel Items, Social Link, dan Projects: pindah item daftar) |
-| `Enter` / `Spasi` / `A` | Buka menu |
-| `Esc` / `Backspace` / `B` | Kembali |
-| `M` | Putar / jeda musik |
-| Scroll mouse | Di About, Skills, dan System: pindah ke menu sebelum/sesudahnya. Di Projects: menggulir daftar |
-| Klik / arahkan mouse | Pilih menu atau item |
+| `↑` `↓` or `W` `S` | Navigate menu (in Items, Social Link, and Projects panels: navigate list items) |
+| `Enter` / `Space` / `A` | Open menu |
+| `Esc` / `Backspace` / `B` | Go back |
+| `M` | Play / pause music |
+| Mouse scroll | In About, Skills, and System: move to the previous/next menu. In Projects: scroll the list |
+| Mouse click / arrow keys | Select menu or item |
 
-## Isi menu
+## Menu Content
 
-- **Status**: tentang aku
-- **Skills**: tech stack yang kupakai
-- **Items**: perangkat dan alat kerjaku
-- **Social Link**: GitHub dan kontak
-- **Projects**: daftar proyek (bisa digulir)
-- **System**: info situs
+- **Status**: about me
+- **Skills**: tech stack I use
+- **Items**: my devices and tools
+- **Social Link**: GitHub and contact
+- **Projects**: project list (can be scrolled)
+- **System**: website info
 
-## Dibuat dengan
+## Built With
 
-HTML, CSS, dan JavaScript murni. Tanpa framework dan tanpa proses build.
+Pure HTML, CSS, and JavaScript. No framework and no build process.
 
-## Menjalankan di komputer sendiri
+## Running Locally
 
 ```bash
 git clone https://github.com/GozyuPolar-ui/portofolioP3R.git
 cd portofolioP3R
 ```
 
-Lalu buka `index.html` dengan ekstensi **Live Server** di VS Code (disarankan), atau server statis
-apa pun.
+Then open `index.html` with **Live Server** in VS Code (recommended), or any static server.
 
-## Struktur
+## Structure
 
 ```
 portofolioP3R/
-├── index.html    # struktur halaman
-├── style.css     # tampilan dan animasi
-├── script.js     # logika menu, panel, dan musik
-└── assets/       # gambar, video, dan audio
+├── index.html    # page structure
+├── style.css     # styling and animations
+├── script.js     # menu logic, panels, and music
+└── assets/       # images, video, and audio
 ```
 
-## Kredit
+## Credits
 
-- Titik awal: replika menu pause Persona 3 Reload oleh
-  [notwewnothing/persona](https://github.com/notwewnothing/persona). Kode di sini sudah banyak
-  kuubah dan kukembangkan sendiri.
-- Persona 3 Reload, termasuk gaya antarmuka dan musiknya, adalah milik **Atlus / SEGA**.
-- Detective Conan (Meitantei Conan) dan gambar-gambarnya adalah karya **Gosho Aoyama / Shogakukan**.
-- Seluruh kode lainnya dan isi portofolio adalah buatanku sendiri.
+- Starting point: replica of the Persona 3 Reload pause menu by
+  [notwewnothing/persona](https://github.com/notwewnothing/persona). The code here has been heavily modified and expanded by myself.
+- Persona 3 Reload, including its interface style and music, belongs to **Atlus / SEGA**.
+- Detective Conan (Meitantei Conan) and its images are by **Gosho Aoyama / Shogakukan**.
+- All other code and portfolio content are my own.
 
-## Penafian
+## Disclaimer
 
-Proyek ini adalah **karya penggemar**, tidak berafiliasi dengan, didukung, atau disponsori oleh
-Atlus, SEGA, Gosho Aoyama, Shogakukan, maupun pemegang hak cipta lainnya. Semua merek, karakter,
-gambar, dan musik adalah milik pemiliknya masing-masing dan dipakai hanya untuk tujuan hobi dan
-non-komersial.
+This project is a **fan-made work**, not affiliated with, supported by, or sponsored by
+Atlus, SEGA, Gosho Aoyama, Shogakukan, or any other copyright holders. All trademarks, characters, images, and music belong to their respective owners and are used only for hobby and non-commercial purposes.
 
-Kalau kamu pemegang hak cipta dan keberatan dengan materi di sini, buka
-[issue](https://github.com/GozyuPolar-ui/portofolioP3R/issues) dan akan segera kuhapus.
+If you are a copyright holder and object to the content here, please open
+[issue](https://github.com/GozyuPolar-ui/portofolioP3R/issues) and I will remove it immediately.
