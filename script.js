@@ -760,12 +760,19 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // 5 slot foto: kolom A (kiri) 3 foto, kolom B (kanan) 2 foto, bergeser setengah slot.
+    // Semua posisi/ukuran dihitung di CSS (--ph-*) supaya tidak menimpa menu/footer/foto lain.
+    const PHOTO_COL_A = '1.2vw';
+    const PHOTO_COL_B = 'calc(1.2vw + var(--ph-w) * 1.16)';
+    const photoTop = (slot) =>
+        `calc(var(--ph-top) + var(--ph-slot) * ${slot} + (var(--ph-slot) - var(--ph-h)) / 2)`;
+
     const predefinedPositions = [
-        { left: '2vw', top: '5vh', rot: -8 },
-        { left: '18vw', top: '22vh', rot: 12 },
-        { left: '4vw', top: '45vh', rot: -5 },
-        { left: '22vw', top: '60vh', rot: 15 },
-        { left: '8vw', top: '75vh', rot: -10 }
+        { left: PHOTO_COL_A, top: photoTop(0), rot: -6 },
+        { left: PHOTO_COL_B, top: photoTop(0.5), rot: 7 },
+        { left: PHOTO_COL_A, top: photoTop(1), rot: 4 },
+        { left: PHOTO_COL_B, top: photoTop(1.5), rot: -7 },
+        { left: PHOTO_COL_A, top: photoTop(2), rot: -4 }
     ];
 
     function randomizePhotos() {

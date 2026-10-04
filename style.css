@@ -918,7 +918,7 @@ body.loaded .site-footer {
 }
 
 body.submenu-open .container {
-    z-index: 76;
+    z-index: 430; /* di atas foto (.photos-wrapper.visible = 420) */
 }
 
 
@@ -1281,6 +1281,16 @@ body:has(.container.menu-shifted) .music-player {
 
 
 .photos-wrapper {
+    /* Area foto = ruang kosong di kiri menu utama. Tepi kiri menu ~ 50vw - 362px*k
+       (k = skala dari script.js), dikurangi sedikit jarak aman. Foto dibagi 2 kolom
+       bergeser; ukurannya mengikuti lebar area itu & tinggi layar supaya tidak
+       menimpa menu, footer, atau satu sama lain. */
+    --ph-limit: calc(50vw - 362px * var(--k, 1) - 28px);
+    --ph-w: min(calc((var(--ph-limit) - 2.2vw) / 2.4), 25vh);
+    --ph-h: calc(var(--ph-w) * 0.68);
+    --ph-top: 5vh;
+    --ph-slot: calc((95vh - 95px) / 3);
+
     position: fixed;
     top: 0;
     left: 0;
@@ -1303,8 +1313,8 @@ body.submenu-photos-active .photos-wrapper.visible {
 
 .photo-container {
     position: absolute;
-    width: 280px;
-    height: 190px;
+    width: var(--ph-w);
+    height: var(--ph-h);
     opacity: 0;
     transform: scale(0.8) rotate(0deg);
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1320,7 +1330,7 @@ body.submenu-photos-active .photos-wrapper.visible {
     inset: 0;
     background-color: rgba(238, 92, 92, 0.8);
     clip-path: polygon(5% 0%, 100% 8%, 95% 100%, 0% 92%);
-    transform: translate(12px, 12px);
+    transform: translate(calc(var(--ph-w) * 0.045), calc(var(--ph-w) * 0.045));
     z-index: 1;
 }
 
@@ -1330,7 +1340,7 @@ body.submenu-photos-active .photos-wrapper.visible {
     background-color: white;
     clip-path: polygon(4.5% 10%, 98% 9.5%, 93.5% 98%, 1.5% 91%);
     z-index: 2;
-    padding: 10px;
+    padding: calc(var(--ph-w) * 0.036);
     display: flex;
     justify-content: center;
     align-items: center;
