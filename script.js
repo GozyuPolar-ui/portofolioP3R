@@ -466,6 +466,57 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+    // Pindah ke menu lain saat submenu masih terbuka (tanpa harus back dulu)
+    function switchSubmenuTo(index) {
+        if (!isSubmenuOpen) return;
+                if (currentIndex !== index) {
+                    // Hide old panel immediately
+                    if (currentPanel) {
+                        currentPanel.classList.remove('visible');
+                        currentPanel.classList.add('hiding');
+                    }
+
+                    // Cleanup old custom panels
+                    cleanupSocialsPanel();
+                    cleanupResumePanel();
+
+                    selectItem(index, true);
+
+                    const data = highlightData[itemSpans[currentIndex].id];
+                    currentPanel = document.getElementById(data.panelId);
+
+                    syncSubmenuChrome();
+
+                    if (currentPanel) {
+                        currentPanel.classList.remove('hiding');
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                currentPanel.classList.add('visible');
+
+                                if (isHeroBarsPanel(currentPanel)) initSocialsPanel(currentPanel);
+                                else if (data.prefix === "calendar") initResumePanel();
+                            });
+                        });
+                    }
+                }
+    }
+
+    // Panel yang punya navigasi daftar sendiri (↑↓ / wheel dipakai untuk daftarnya)
+    function panelHasOwnListNav() {
+        return isHeroBarsPanel(currentPanel) || (currentPanel && currentPanel.id === 'panel_calendar');
+    }
+
+    // Scroll mouse di panel biasa (About, Skills, System) = pindah ke menu sebelum/sesudahnya
+    let submenuWheelLock = false;
+    window.addEventListener('wheel', function (e) {
+        if (!isSubmenuOpen || submenuWheelLock || panelHasOwnListNav()) return;
+        if (Math.abs(e.deltaY) < 10) return;
+        submenuWheelLock = true;
+        setTimeout(() => { submenuWheelLock = false; }, 450);
+        const dir = e.deltaY > 0 ? 1 : -1;
+        switchSubmenuTo((currentIndex + dir + itemSpans.length) % itemSpans.length);
+    }, { passive: true });
+
     // Keyboard navigation
     document.addEventListener("keydown", function (event) {
         if (isSubmenuOpen) {
@@ -475,6 +526,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             if (currentPanel && currentPanel.id === 'panel_calendar') {
                 if (handleResumeKey(event)) return;
+            }
+
+            // Panel biasa: ↑↓ / W S pindah ke menu lain
+            if (!panelHasOwnListNav()) {
+                if (event.key === "ArrowDown" || event.key === "s" || event.key === "S") {
+                    switchSubmenuTo((currentIndex + 1) % itemSpans.length);
+                    return;
+                }
+                if (event.key === "ArrowUp" || event.key === "w" || event.key === "W") {
+                    switchSubmenuTo((currentIndex - 1 + itemSpans.length) % itemSpans.length);
+                    return;
+                }
             }
 
             // Handle submenu close
@@ -518,36 +581,7 @@ document.addEventListener("DOMContentLoaded", function () {
         row.addEventListener("click", function (e) {
             e.stopPropagation();
             if (isSubmenuOpen) {
-                if (currentIndex !== index) {
-                    // Hide old panel immediately
-                    if (currentPanel) {
-                        currentPanel.classList.remove('visible');
-                        currentPanel.classList.add('hiding');
-                    }
-
-                    // Cleanup old custom panels
-                    cleanupSocialsPanel();
-                    cleanupResumePanel();
-
-                    selectItem(index, true);
-
-                    const data = highlightData[itemSpans[currentIndex].id];
-                    currentPanel = document.getElementById(data.panelId);
-
-                    syncSubmenuChrome();
-
-                    if (currentPanel) {
-                        currentPanel.classList.remove('hiding');
-                        requestAnimationFrame(() => {
-                            requestAnimationFrame(() => {
-                                currentPanel.classList.add('visible');
-
-                                if (isHeroBarsPanel(currentPanel)) initSocialsPanel(currentPanel);
-                                else if (data.prefix === "calendar") initResumePanel();
-                            });
-                        });
-                    }
-                }
+                switchSubmenuTo(index);
             } else {
                 selectItem(index);
                 openSubmenu();
@@ -763,7 +797,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 5 slot foto: kolom A (kiri) 3 foto, kolom B (kanan) 2 foto, bergeser setengah slot.
     // Semua posisi/ukuran dihitung di CSS (--ph-*) supaya tidak menimpa menu/footer/foto lain.
     const PHOTO_COL_A = '1.2vw';
-    const PHOTO_COL_B = 'calc(1.2vw + var(--ph-w) * 1.16)';
+    const PHOTO_COL_B = 'max(1.2vw, min(calc(1.2vw + var(--ph-w) * 0.92), calc(var(--ph-limit) - var(--ph-w))))';
     const photoTop = (slot) =>
         `calc(var(--ph-top) + var(--ph-slot) * ${slot} + (var(--ph-slot) - var(--ph-h)) / 2)`;
 

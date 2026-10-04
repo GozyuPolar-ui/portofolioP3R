@@ -1286,7 +1286,7 @@ body:has(.container.menu-shifted) .music-player {
        bergeser; ukurannya mengikuti lebar area itu & tinggi layar supaya tidak
        menimpa menu, footer, atau satu sama lain. */
     --ph-limit: calc(50vw - 362px * var(--k, 1) - 28px);
-    --ph-w: min(calc((var(--ph-limit) - 2.2vw) / 2.4), 25vh);
+    --ph-w: min(280px, calc(var(--ph-limit) - 1.2vw));
     --ph-h: calc(var(--ph-w) * 0.68);
     --ph-top: 5vh;
     --ph-slot: calc((95vh - 95px) / 3);
